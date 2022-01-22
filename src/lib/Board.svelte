@@ -18,13 +18,18 @@
   let rows: number = 0;
   let columns: number = 0;
 
+  // DATA VARIABLES
+  let boardData: Array<Array<number>> = [];
+
   // REACTIVITY
   $: {
     if (board) {
       rows = Math.floor(boardHeight / boxSize);
       columns = Math.round(boardWidth / boxSize);
 
-      console.log(rows, columns);
+      boardData = Array(rows)
+        .fill(0)
+        .map(() => Array(columns).fill(0));
 
       board.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
       board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
@@ -73,7 +78,10 @@
   afterUpdate(() => {});
 </script>
 
-<div id="board" class="grid w-full h-full border-2 border-neutral-700 p-1">
+<div
+  id="board"
+  class="grid w-full h-full rounded border-2 border-neutral-700 p-1"
+>
   {#each Array(rows) as i}
     {#each Array(columns) as j}
       <span class="box w-full h-full bg-neutral-600 rounded" />
