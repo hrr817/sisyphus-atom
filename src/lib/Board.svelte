@@ -21,8 +21,8 @@
   // REACTIVITY
   $: {
     if (board) {
-      rows = Math.round(boardWidth / boxSize);
-      columns = Math.floor(boardHeight / boxSize);
+      rows = Math.floor(boardHeight / boxSize);
+      columns = Math.round(boardWidth / boxSize);
 
       console.log(rows, columns);
 
