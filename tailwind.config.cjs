@@ -3,12 +3,19 @@
 module.exports = {
   // add this section
   purge: ["./src/**/*.html", "./src/**/*.svelte"],
-  darkMode: false, // or 'media' or 'class'
+
+  // or 'media' or 'class'
+  darkMode: false,
+
   theme: {
     extend: {},
   },
+
   variants: {
     extend: {},
   },
+
   plugins: [],
+  content: ["./src/**/*.{html,js,svelte,ts}"],
+  important: true,
 };

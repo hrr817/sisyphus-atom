@@ -1,5 +1,6 @@
-import Start from './Start.svelte'
+import "./app.css";
+import Start from "./Start.svelte";
 
 export default new Start({
-  target: document.getElementById('__pspspsps__')
-})
+  target: document.getElementById("__pspspsps__"),
+});

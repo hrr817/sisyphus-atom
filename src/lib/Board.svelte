@@ -1,6 +1,7 @@
 <script lang="ts">
   // IMPORTS
   import { onMount, onDestroy, afterUpdate } from "svelte";
+  import { get } from "svelte/store";
 
   // CONSTANTS
   const BOX_MIN_SIZE = 20;
@@ -19,7 +20,9 @@
   let columns: number = 0;
 
   // DATA VARIABLES
+  let running: boolean = false;
   let boardData: Array<Array<number>> = [];
+  let startPoints: Map<string, boolean> = new Map();
 
   // REACTIVITY
   $: {
@@ -27,9 +30,7 @@
       rows = Math.floor(boardHeight / boxSize);
       columns = Math.round(boardWidth / boxSize);
 
-      boardData = Array(rows)
-        .fill(0)
-        .map(() => Array(columns).fill(0));
+      boardData = Array(rows).fill(0).map(() => Array(columns).fill(0));
 
       board.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
       board.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
@@ -76,21 +77,51 @@
   });
 
   afterUpdate(() => {});
+
+  // Events handlers
+
+  // On Cell click
+  function handleCellClick(e: MouseEvent, i: number, j: number) {
+    if (running) return;
+
+    if (startPoints.get(`${i}-${j}`)) startPoints.set(`${i}-${j}`, false);
+    else startPoints.set(`${i}-${j}`, true);
+
+    startPoints = startPoints
+  }
+
+  // Handle Reset
+  function reset() {
+    running = false;
+    boardData = Array(rows).fill(0).map(() => Array(columns).fill(0));
+    startPoints.clear();
+  }
 </script>
 
 <div
   id="board"
   class="grid w-full h-full rounded border-2 border-neutral-700 p-1"
 >
-  {#each Array(rows) as i}
-    {#each Array(columns) as j}
-      <span class="box w-full h-full bg-neutral-600 rounded" />
+  {#each Array(rows) as _, i}
+    {#each Array(columns) as _, j}
+      <span
+        class="box{
+        running ?
+          boardData[i][j] ? ' bg-green-500': '' :
+          startPoints.get(`${i}-${j}`) ? ' selected': ''
+        }"
+        on:click={(e) => handleCellClick(e, i, j)}
+      />
     {/each}
   {/each}
 </div>
 
-<style>
+<style lang="postcss">
   .box {
-    content: "";
+    @apply w-full h-full bg-neutral-600 rounded cursor-pointer hover:bg-blue-300;
+  }
+
+  .selected {
+    @apply bg-violet-400 !important;
   }
 </style>
